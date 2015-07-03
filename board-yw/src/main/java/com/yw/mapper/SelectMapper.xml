@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="com.yw.mapper.SelectMapper">
+
+	<!-- <typeAlias type="com.yw.bean.Word" alias="Word"/> -->
+	
+    <select id="listAll" resultType="com.yw.bean.Word">
+        select * from boardyw order by objectId desc
+    </select>
+    
+    <insert id="insertOne" parameterType="com.yw.bean.Word">
+    	insert into boardyw(objectId,wordName,wordEnName,wordDefine,writer)
+    	 values(auto_num.nextval,#{wordName},#{wordEnName},#{wordDefine},#{writer})
+    </insert>
+    
+    <delete id="deleteOne" parameterType="Integer">
+    	delete from boardyw where objectId=#{objectId}
+    </delete>
+    
+    <update id="updateOne" parameterType="com.yw.bean.Word">
+		update boardyw set wordName=#{wordName}, 
+						   wordEnName=#{wordEnName}, 
+						   wordDefine=#{wordDefine}, 
+						   writer=#{writer}
+		where objectId =#{objectId }
+	</update>
+	
+	<select id="selectOne" parameterType="Integer" resultType="com.yw.bean.Word">
+		select * from boardyw where objectId = #{objectId}
+	</select>
+	
+</mapper>
