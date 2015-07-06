@@ -1,20 +1,43 @@
 package com.yw.controller;
 
 import java.io.File;
+import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
+import net.sf.json.JSONObject;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import com.yw.bean.XmlDTO;
 
+
+
+
+/**
+ * <pre>
+ * com.yw.controller
+ *   |_ XmlLoadController.java
+ * </pre>
+ * 
+ * Desc : 
+ * @Company : DataStreams
+ * @Author  : HLEE
+ * @Date    : 2015. 7. 3. 오후 4:52:03
+ * @Version : 
+ */
 @Controller
 public class XmlLoadController {
 
@@ -44,16 +67,17 @@ public class XmlLoadController {
 	}
 	
 	
-	/**
-	 * Desc : main
-	 * @Method Name : main
-	 * @param argv
-	 */
 	
-	@RequestMapping(value="/xmlReader")
+	
+	/**
+	 * Desc : xml file을 읽어와 웹상에 Data 보이기
+	 * @Method Name : xmlReader
+	 * @param file_path
+	 */
 	@ResponseBody
-	public NodeList xmlReader(@Param(value="file_path") String file_path) {
-
+	@RequestMapping(value="/xmlReader", method=RequestMethod.POST)
+	public List<XmlDTO> xmlReader(@Param(value="file_path") String file_path) throws Exception {
+		
 		File file = null; //io
 		DocumentBuilderFactory docBuildFact = null; //xml.parsers
 		DocumentBuilder docBuild = null; //xml.parsers
@@ -88,6 +112,9 @@ public class XmlLoadController {
 		
 		int lastIndex;
 		
+		List<XmlDTO> xmlList = new ArrayList<XmlDTO>();
+		/*XmlDTO xmlDto = null;*/
+		XmlDTO xmlDto = new XmlDTO();
 		try {
 			
 			lastIndex = file_path.lastIndexOf("\\"); // 맨마지막 "\\" 의 위치
@@ -129,13 +156,17 @@ public class XmlLoadController {
 			/* person엘리먼트 리스트*/
 			personlist = doc.getElementsByTagName("person"); // "person tag" 에 해당하는 Tree 가져오기
 			
+			String nameNode = "";
+			String addrNode = "";
 			
 			for (int i = 0; i < personlist.getLength(); i++) {
-
+				
+				/*xmlDto = new XmlDTO();*/
+				
 				System.out.println("---------- personNode " + i + "번째 ------------------");
 
 				personNode = personlist.item(i);
-
+				
 				if (personNode.getNodeType() == Node.ELEMENT_NODE) {
 					
 					/* person엘리먼트*/
@@ -146,23 +177,40 @@ public class XmlLoadController {
 					nameElmnt = (Element) nameList.item(0);
 					name = nameElmnt.getFirstChild();
 					
-										
-					System.out.println("name    : " + stringSlice(name.getNodeValue(), 5));
+					nameNode = name.getNodeValue();
+					
+					if ( !(nameNode.length() < 1) && nameNode != null){
+						nameNode = stringSlice(nameNode, 5);
+					}
+					
+					System.out.println("name    : " + nameNode);
 
 					/* tel 태그*/
 					telList = personElmnt.getElementsByTagName("tel"); // "tel tag" 에 해당하는 Tree 가져오기
-					telElmnt = (Element) telList.item(1);   // "tel tag"중 "Index" 에 해당하는 "Element(tag 정보)" 를 가져온다.
+					telElmnt = (Element) telList.item(0);   // "tel tag"중 "Index" 에 해당하는 "Element(tag 정보)" 를 가져온다.
 					tel = telElmnt.getFirstChild(); 		// "telElmnt"(teltag 중 0번째 tag) 에 해당하는 값, 해당 tag의 value를 가져온다.
 					
 					System.out.println("tel     : " + tel.getNodeValue()); // (1 번째) "Element"의 값 출력
-
+					
 					 /* address 태그*/
 					addressList = personElmnt.getElementsByTagName("address");
 					addressElmnt = (Element) addressList.item(0);
 					address = addressElmnt.getFirstChild();
 					
-					System.out.println("address : " + address.getNodeValue());
+					addrNode = address.getNodeValue();
 					
+					if ( !(addrNode.length() < 1) && addrNode != null){
+						addrNode = stringSlice(addrNode, 7);
+					}
+					
+					System.out.println("address : " + addrNode);
+					
+					xmlDto.setName(nameNode);
+					xmlDto.setTel(tel.getNodeValue());
+					xmlDto.setAddress(addrNode);
+					
+					
+					xmlList.add(xmlDto);
 				} //end if
 
 				System.out.println("---------------------------------------------\n");
@@ -175,6 +223,6 @@ public class XmlLoadController {
 			
 		}// end try ~ catch ~ finally
 		
-		return personlist;
+		return xmlList;
 	}
 }

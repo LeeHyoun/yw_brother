@@ -25,7 +25,6 @@ import org.w3c.dom.NodeList;
  * @Version : Java 1.7
  */
 public class XmlReader {
-
 	
 	
 	/**

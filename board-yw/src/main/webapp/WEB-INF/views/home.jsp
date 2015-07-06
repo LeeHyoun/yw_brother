@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"  pageEncoding="UTF-8"%>
 
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html >
 <html>
 
 <!-- <script type="text/javascript" src="http:////code.jquery.com/jquery-2.1.4.min.js"></script> -->
@@ -231,49 +231,99 @@ function listPage11(){
 
 /* *******************************[ 2015/07/03 수정 ]************************************ 
  * Author : HLEE
- * -- 1) XML 파일을 읽어 들여 "TextArea" 에 보이기  --- 진행상황 (?)
+ * -- + 1) XML 파일을 읽어 들여 "TextArea" 에 보이기  --- 진행상황 (---------10)
+ * 	  	+-- 파일을 읽어 Console 창에 출력 (O)
+ *	  	+-- home.jsp 단에 TextArea 에 뿌리기. (O)
+ *    	+-- HTML 형식으로 Data 처리 (O)
  */
  
 function domTest() {
 	 
 	 //alert($("#xmlView").val());
+	 if ($("#xmlView").val() == "" || $("#xmlView").val() == null){
+		 alert("XML 파일을 선택해 주세요!");
+		 return;
+	 }
 	 
 	 var file_path = $("#xmlView").val();
 	 
 	 $.ajax({
-			url : "xmlReader" ,
-			type : "get",
-			data : {
+			url      : "xmlReader",
+			type     : "post", //****
+			dataType : "json",
+			data     : {
 						"file_path" : file_path
-					},
-			success : function(data){
-				alert(data.val());
+					   },
+			
+			success  : function(data){
+				
+				alert("ajax data : " + data[0].name);
+				
+				var content = "";
+			
+				content += "<tr><td>번호</td><td>이름</td><td>전화번호</td><td>주소</td></tr>";  // 컬럼				
+			
+				for (var i = 0; i < data.length; i++) {
+					content += "<tr class='cc'>";
+					content += 	"<td>"+ i +"</td>";
+					content += 	"<td>"+data[i].name+"</td>";
+					content += 	"<td>"+data[i].tel+"</td>"
+					content += 	"<td>"+data[i].address+"</td></tr>"
+				}
+				
+				$('#xmlData').html(content);
+				
+				/* 마우스 포인터 위치에 따른 이벤트 */
+				$('.cc').mouseover(function(){
+			   			$(this).addClass('ui-state-hover');                              
+			    }).mouseout(function(){
+			   			$(this).removeClass('ui-state-hover');
+			    });
 			}
-		
-		});
+	 }).done(function(){  // ajax 성공시 수행.
+
+		 $(".cc").click(function(){    
+			save = -1;
+			$(".cc").removeClass("qqqq");	
+			
+			$(this).addClass('qqqq');
+			save = $(".qqqq").children().children("input").val();	
+		}); 
+	});
+} 
  
-}
-
-
+ 
+/*
+ * -- + 1) 읽어온 Data를 XML 파일로 저장해보기  --- 진행상황 (----------)
+ */
+function mkdom(){
+	alert("xml file 생성~");		 
+} 
+/* ************************************************************************** 2015/07/03 End */
 </script>
 </head>
+
 
 <body>
 	<div class="a4">
 		<div>
-			<input id="xmlView" type="file" style="width: 300px;"><br><br>
+			<h1>xml</h1>
+		</div>
+		<div>
+			<input id="xmlView" type="file" style="width: 300px;">&nbsp;
 			<input type="button" value="XML VIEW" onclick="domTest()">
-			<input type="button" value="VIEW Close" onclick="domTestClose()">
+			<input type="button" value="Create XML" onclick="mkdom()">
 			<p></p>
 		</div>
+		<div id="xmlData" style="border:solid; 2px; height: 200px; width: 600px; overflow: auto;"></div>
 		<hr>
 		<div>
 			<h1>word</h1>
 		</div>
 
 		<div class="a3">
-			<span class="a1">단어명</span> <input type="text" id="w_search"
-				class="a1">
+			<span class="a1">단어명</span> 
+			<input type="text" id="w_search" class="a1">
 			<div>
 				<input type="button" value="검색" onclick="wordSearch()">
 			</div>

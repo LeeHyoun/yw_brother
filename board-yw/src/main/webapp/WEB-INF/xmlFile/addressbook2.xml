@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<addressbook xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<person>
+		<name>김2사</name>
+		<tel>010-2229-0000</tel>
+		<address>서울시 교대1동</address>
+	</person>
+	<person>
+		<name>김3사</name>
+		<tel>010-2229-0001</tel>
+		<address>서울시 교대2동</address>
+	</person>
+	<person>
+		<name>김4사</name>
+		<tel>010-2229-0002</tel>
+		<address>서울시 교대3동</address>
+	</person>
+	<person>
+		<name>김5사</name>
+		<tel>010-2229-0003</tel>
+		<address>서울시 교대4동</address>
+	</person>
+	<person>
+		<name>김6사</name>
+		<tel>010-2229-0004</tel>
+		<address>서울시 교대5동</address>
+	</person>
+	<person>
+		<name>김7사</name>
+		<tel>010-2229-0005</tel>
+		<address>서울시 교대6동</address>
+	</person>
+	<person>
+		<name>김8사</name>
+		<tel>010-2229-0006</tel>
+		<address>서울시 교대7동</address>
+	</person>
+	<person>
+		<name>김9사</name>
+		<tel>010-2229-0007</tel>
+		<address>서울시 교대8동</address>
+	</person>
+	<person>
+		<name>김10사</name>
+		<tel>010-2229-0008</tel>
+		<address>서울시 교대9동</address>
+	</person>
+	<person>
+		<name>김11사</name>
+		<tel>010-2229-0009</tel>
+		<address>서울시 교대10동</address>
+	</person>
+	<person>
+		<name>김12사</name>
+		<tel>010-2229-0010</tel>
+		<address>서울시 교대11동</address>
+	</person>
+	<person>
+		<name>김13사</name>
+		<tel>010-2229-0011</tel>
+		<address>서울시 교대12동</address>
+	</person>
+	<person>
+		<name>김14사</name>
+		<tel>010-2229-0012</tel>
+		<address>서울시 교대13동</address>
+	</person>
+	<person>
+		<name>김15사</name>
+		<tel>010-2229-0013</tel>
+		<address>서울시 교대14동</address>
+	</person>
+	<person>
+		<name>김16사</name>
+		<tel>010-2229-0014</tel>
+		<address>서울시 교대15동</address>
+	</person>
+	<person>
+		<name>김17사</name>
+		<tel>010-2229-0015</tel>
+		<address>서울시 교대16동</address>
+	</person>
+	<person>
+		<name>김18사</name>
+		<tel>010-2229-0016</tel>
+		<address>서울시 교대17동</address>
+	</person>
+	<person>
+		<name>김19사</name>
+		<tel>010-2229-0017</tel>
+		<address>서울시 교대18동</address>
+	</person>
+	<person>
+		<name>김20사</name>
+		<tel>010-2229-0018</tel>
+		<address>서울시 교대19동</address>
+	</person>
+	<person>
+		<name>김21사</name>
+		<tel>010-2229-0019</tel>
+		<address>서울시 교대20동</address>
+	</person>
+	<person>
+		<name>김22사</name>
+		<tel>010-2229-0020</tel>
+		<address>서울시 교대21동</address>
+	</person>
+	<person>
+		<name>김23사</name>
+		<tel>010-2229-0021</tel>
+		<address>서울시 교대22동</address>
+	</person>
+	<person>
+		<name>김24사</name>
+		<tel>010-2229-0022</tel>
+		<address>서울시 교대23동</address>
+	</person>
+	<person>
+		<name>김25사</name>
+		<tel>010-2229-0023</tel>
+		<address>서울시 교대24동</address>
+	</person>
+	<person>
+		<name>김26사</name>
+		<tel>010-2229-0024</tel>
+		<address>서울시 교대25동</address>
+	</person>
+	<person>
+		<name>김27사</name>
+		<tel>010-2229-0025</tel>
+		<address>서울시 교대26동</address>
+	</person>
+	<person>
+		<name>김28사</name>
+		<tel>010-2229-0026</tel>
+		<address>서울시 교대27동</address>
+	</person>
+	<person>
+		<name>김29사</name>
+		<tel>010-2229-0027</tel>
+		<address>서울시 교대28동</address>
+	</person>
+	<person>
+		<name>김30사</name>
+		<tel>010-2229-0028</tel>
+		<address>서울시 교대29동</address>
+	</person>
+</addressbook>

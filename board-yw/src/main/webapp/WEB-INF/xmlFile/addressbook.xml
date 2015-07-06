@@ -12,5 +12,17 @@
 		<tel>없음</tel>
 		<address>경기</address>
 	</person>
+	<person>
+		<name>김XX이사입니다.</name>
+		<tel>010-1245-1234</tel>
+		<tel>없음</tel>
+		<address>경기</address>
+	</person>
+	<person>
+		<name>김XX이사입니다.</name>
+		<tel>010-1245-1234</tel>
+		<tel>없음</tel>
+		<address>경기</address>
+	</person>
 	
 </addressbook>
