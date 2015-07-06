@@ -6,8 +6,8 @@ import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.transform.Transformer; // XSLT 변환기는 해당 Transformer 추상 클래스를 상속한 객체를 말한다.
 import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer; // XSLT 변환기는 해당 Transformer 추상 클래스를 상속한 객체를 말한다.
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -40,6 +41,18 @@ import com.yw.bean.XmlDTO;
  * 				HLEE  | 2015.07.06 | 09:42:03
  */
 
+/**
+ * <pre>
+ * com.yw.controller
+ *   |_ XmlLoadController.java
+ * </pre>
+ * 
+ * Desc : 
+ * @Company : DataStreams
+ * @Author  : HLEE
+ * @Date    : 2015. 7. 6. 오후 1:00:39
+ * @Version : 
+ */
 @Controller
 public class XmlLoadController {
 
@@ -70,11 +83,12 @@ public class XmlLoadController {
 	
 	
 	
-	
 	/**
 	 * Desc : xml file을 읽어와 웹상에 Data 보이기
 	 * @Method Name : xmlReader
 	 * @param file_path
+	 * @return
+	 * @throws Exception
 	 */
 	@ResponseBody
 	@RequestMapping(value="/xmlReader", method=RequestMethod.POST)
@@ -163,7 +177,7 @@ public class XmlLoadController {
 			
 			for (int i = 0; i < personlist.getLength(); i++) {
 				
-				/*xmlDto = new XmlDTO();*/
+				xmlDto = new XmlDTO();
 				
 				System.out.println("---------- personNode " + i + "번째 ------------------");
 
@@ -213,6 +227,7 @@ public class XmlLoadController {
 					
 					
 					xmlList.add(xmlDto);
+					
 				} //end if
 
 				System.out.println("---------------------------------------------/n");
@@ -224,6 +239,11 @@ public class XmlLoadController {
 		} finally {
 			
 		}// end try ~ catch ~ finally
+		
+		
+		for (XmlDTO xmlDTO : xmlList) {
+			System.out.println(xmlDTO.getName());
+		}
 		
 		return xmlList;
 	}
@@ -283,4 +303,90 @@ public class XmlLoadController {
 		System.out.println("파일 생성 완료");
 	}
 		
-}
+	
+	
+	/**
+	 * Desc : 읽어온 xml문서의 요소를 수정. 
+	 * @Method Name : updateXml
+	 * @param file_path
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/updateXML", method=RequestMethod.POST)
+	public void updateXML(@Param(value="file_path") String file_path) throws Exception{
+		
+		System.out.println("업데이트를 시작합니다.");
+		
+		/*DOM 파서 생성*/
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setIgnoringElementContentWhitespace(true); //요소의 내용의 공백을 배제하도록 지정 
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		
+		/*XML 문서 파싱하기*/
+		Document document = builder.parse(file_path);
+
+		//------------------------수정 내용 중 요소 노드
+		//고칠 노드 이름 찾을 수 있는 모든 노드 똑같은 이름의 노드 큐 받고
+		NodeList nodes = document.getElementsByTagName("name");
+		//지금 대기 중 선택 고칠 노드
+		Node n = nodes.item(0);
+		//이 노드의 텍스트 수정
+		n.setTextContent("수정된노드입니다.");
+		
+		System.out.println("수정이 완료되었습니다.");
+		
+		
+		/*//------------------------노드 하위 원소 증가
+		//고칠 노드 이름 찾을 수 있는 모든 노드 똑같은 이름의 노드 큐 받고
+		NodeList nodes1 = document.getElementsByTagName("addressbook");
+		//지금 대기 중 선택 고칠 노드
+		Node root_ChildNode = nodes1.item(0);
+		//할 증가 노드 원소 만들기
+		Element person = document.createElement("person");
+		
+		//노드 속성 설정
+		Attr attr = document.createAttribute("속성이 붙어있는 태그명");
+		attr.setValue("속성값");
+		person.setAttributeNode(attr);
+		
+		
+		//하위요소 추가.
+		Element name = document.createElement("name");    //이름
+		name.setTextContent("추가 된 노드");
+		person.appendChild(name);
+		root_ChildNode.appendChild(person);
+		
+		Element tel = document.createElement("tel");     //전화번호
+		tel.setTextContent("추가 된 노드");
+		person.appendChild(tel);
+		root_ChildNode.appendChild(person);
+		
+		Element nn3 = document.createElement("address"); //주소
+		nn3.setTextContent("추가 된 노드");
+		person.appendChild(nn3);
+		root_ChildNode.appendChild(person);
+
+		System.out.println(document.getElementsByTagName("person").getLength());*/
+
+
+		//-------------------------파일로 저장 중
+		//만듭니다. 쓸 변환 DOM 대상 공장 대상
+		TransformerFactory factory2 = TransformerFactory.newInstance();
+		
+		//획득 변환기 대상
+		Transformer tf = factory2.newTransformer();
+		tf.setOutputProperty(OutputKeys.METHOD, "xml");
+		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		tf.setOutputProperty(OutputKeys.INDENT, "yes");
+		
+		//정의 변형할 원본 개체
+		DOMSource xml = new DOMSource(document);
+		
+		//정의 다음으로 변환 대상 파일이 한다
+		StreamResult sr = new StreamResult(new File(file_path));
+		
+		//변환 시작
+		tf.transform(xml, sr);
+
+	}// end method updateXML
+	
+}// end class

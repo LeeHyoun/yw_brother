@@ -1,7 +1,7 @@
-<?xml version="1.0" encoding="utf-8" ?>
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
 <addressbook>
 	<person>
-		<name>이XX</name>
+		<name>수정된 노드 입니다.</name>
 		<tel>010-1245-1234</tel>
 		<tel>010-1111-2222</tel>
 		<address>서울</address>
@@ -24,5 +24,4 @@
 		<tel>없음</tel>
 		<address>경기</address>
 	</person>
-	
 </addressbook>

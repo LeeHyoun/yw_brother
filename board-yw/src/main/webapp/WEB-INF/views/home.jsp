@@ -232,6 +232,8 @@ function listPage11(){
 
 
 
+
+
 /* *******************************[ 2015/07/03 수정 ]************************************ 
  * Author : HLEE
  * -- + 1) XML 파일을 읽어 들여 "TextArea" 에 보이기  --- 진행상황 (---------10)
@@ -240,45 +242,47 @@ function listPage11(){
  *    	+-- HTML 형식으로 Data 처리 (O)
  */
  
+
+ 
 function domTest() {
 	 
+	 var file_path = $("#xmlView").val();
+	 
 	 //alert($("#xmlView").val());
-	 if ($("#xmlView").val() == "" || $("#xmlView").val() == null){
+	 if (file_path == "" || file_path == null){
 		 alert("XML 파일을 선택해 주세요!");
 		 return;
 	 }
 	 
-	 var file_path = $("#xmlView").val();
-	 
 	 $.ajax({
-			url      : "xmlReader",
-			type     : "post", //****
-			dataType : "json",
+			url      : 		"xmlReader",
+			type     : 		"post", //****
+			dataType : 		"json",
 			data     : {
-						"file_path" : file_path
+							"file_path" : file_path
 					   },
 			
 			success  : function(data){
 				
-				alert("ajax data : " + data[0].name);
+				alert("ajax data : " + data[1].name);
 				
 				var content = "";
 			
 				content += "<tr><td>번호</td><td>이름</td><td>전화번호</td><td>주소</td></tr>";  // 컬럼				
-			
+				
 				for (var i = 0; i < data.length; i++) {
-					content += "<tr class='cc'>";
-					content += 	"<td>"+ i +"</td>";
-					content += 	"<td>"+data[i].name+"</td>";
-					content += 	"<td>"+data[i].tel+"</td>"
-					content += 	"<td>"+data[i].address+"</td></tr>"
+					content += 	"<tr class='cc'>";
+					content += 	"<td>" + i               + "</td>";
+					content += 	"<td>" + data[i].name    + "</td>";
+					content += 	"<td>" + data[i].tel     + "</td>"
+					content += 	"<td>" + data[i].address + "</td></tr>"
 				}
 				
 				$('#xmlData').html(content);
 				
 				/* 마우스 포인터 위치에 따른 이벤트 */
 				$('.cc').mouseover(function(){
-			   			$(this).addClass('ui-state-hover');                              
+		   				$(this).addClass('ui-state-hover');                              
 			    }).mouseout(function(){
 			   			$(this).removeClass('ui-state-hover');
 			    });
@@ -321,12 +325,12 @@ function mkdom(){
 	alert("xml file 생성~");
 	
 	$.ajax({
-		url      : "saveDOMToFile",
-		type     : "post", //****
-		dataType : "json",
+		url      : 		"saveDOMToFile",
+		type     : 		"post", //****
+		dataType : 		"json",
 		data     : {
-					"file_path" : file_path,
-					"createName": createName
+						"file_path" : file_path,
+						"createName": createName
 				   },
 		
 		success  : function(data){
@@ -334,6 +338,38 @@ function mkdom(){
 		}
 	});
 } 
+ 
+ function updateXML(){
+
+	alert("수정을 시작합니다.");
+	
+	var file_path = $("#xmlView").val(); 
+		 
+	//alert($("#xmlView").val());
+	if (file_path == "" || file_path == null){
+		alert("XML 파일을 선택해 주세요!");
+		return;
+	}
+	
+	$.ajax({
+		url      : 		"updateXML",
+		type     : 		"post", //****
+		dataType : 		"json",
+		data     : {
+						"file_path" : file_path,
+				   },
+		
+		success  : function(data){
+			alert("수정이 완료되었습니다.");
+		}
+	}).done(function(){
+		alert("성공");
+		domTest();
+	}).fail(function(){
+		alert("수정실패...");
+		domTest();
+	});
+ }
 
 </script>
 </head>
@@ -345,13 +381,16 @@ function mkdom(){
 			<h1>xml</h1>
 		</div>
 		<div>
-			<input id="xmlView" type="file" style="width: 300px;">&nbsp;
+			<input id="xmlView" type="file" style="width: 280px;">&nbsp;
 			<input type="button" value="XML VIEW" onclick="domTest()"><br>
 			파일 이름<input id="createName" type="text">
 			<input type="button" value="Create XML" onclick="mkdom()">
+			<input type="button" value="Update XML" onclick="updateXML()">
 			<p></p>
 		</div>
 		<div id="xmlData" style="border:solid; 2px; height: 200px; width: 600px; overflow: auto;"></div>
+				
+		
 		<hr>
 		<div>
 			<h1>word</h1>
