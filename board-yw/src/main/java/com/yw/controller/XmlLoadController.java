@@ -1,15 +1,16 @@
 package com.yw.controller;
 
 import java.io.File;
-import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-
-import net.sf.json.JSONObject;
+import javax.xml.transform.Transformer; // XSLT 변환기는 해당 Transformer 추상 클래스를 상속한 객체를 말한다.
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
@@ -24,8 +25,6 @@ import org.w3c.dom.NodeList;
 import com.yw.bean.XmlDTO;
 
 
-
-
 /**
  * <pre>
  * com.yw.controller
@@ -36,8 +35,11 @@ import com.yw.bean.XmlDTO;
  * @Company : DataStreams
  * @Author  : HLEE
  * @Date    : 2015. 7. 3. 오후 4:52:03
- * @Version : 
+ * @Version : 작성자 |   작성일   | 작성시간
+ * 				HLEE  | 2015.07.03 | 04:52:03
+ * 				HLEE  | 2015.07.06 | 09:42:03
  */
+
 @Controller
 public class XmlLoadController {
 
@@ -117,7 +119,7 @@ public class XmlLoadController {
 		XmlDTO xmlDto = new XmlDTO();
 		try {
 			
-			lastIndex = file_path.lastIndexOf("\\"); // 맨마지막 "\\" 의 위치
+			lastIndex = file_path.lastIndexOf("//"); // 맨마지막 "//" 의 위치
 			
 			fileName = file_path.substring(lastIndex+1); // 파일명부터 확장자까지.
 			path = file_path.substring(0, lastIndex+1); // 파일명 전의 경로
@@ -150,7 +152,7 @@ public class XmlLoadController {
 			/*인접한 텍스트 노드를 병합하고 빈(공백) 것은 제거한다.*/ 
 			doc.getDocumentElement().normalize();
 			
-			System.out.println("Root element : " + doc.getDocumentElement().getNodeName() + "\n");
+			System.out.println("Root element : " + doc.getDocumentElement().getNodeName() + "/n");
 			
 
 			/* person엘리먼트 리스트*/
@@ -213,7 +215,7 @@ public class XmlLoadController {
 					xmlList.add(xmlDto);
 				} //end if
 
-				System.out.println("---------------------------------------------\n");
+				System.out.println("---------------------------------------------/n");
 				
 			} // end for
 
@@ -225,4 +227,60 @@ public class XmlLoadController {
 		
 		return xmlList;
 	}
+	
+	
+	
+	
+	/**
+	 * Desc : DOM객체를 XML 문서파일로 만들기
+	 * @Method Name : SaveDOMToFile
+	 * @param file_path
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/saveDOMToFile", method=RequestMethod.POST)
+	public void SaveDOMToFile(	@Param(value="file_path") String file_path,
+							    @Param(value="createName") String createName) throws Exception{
+		
+		System.out.println("XML 파일 생성을 시작합니다....");
+		
+		File file = null;
+		
+		/*DOM 파서 생성*/
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setIgnoringElementContentWhitespace(true);
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		
+		/*XML 문서 파싱하기*/
+		Document document = builder.parse(file_path);
+
+		/*루트 엘리먼트 참조 얻기*/
+		Element eRoot = document.getDocumentElement();
+
+		/*변환기 생성*/
+		TransformerFactory tf = TransformerFactory.newInstance();
+		Transformer transformer = tf.newTransformer();
+
+		/*출력 포맷 설정*/
+		transformer.setOutputProperty(OutputKeys.METHOD, "xml");
+		transformer.setOutputProperty(OutputKeys.ENCODING,"UTF-8");             	// 인코딩을 UTF-8로 한다.
+		//transformer.setOutputProperty(OutputKeys.DOCTYPE_SYSTEM,"bml.dtd");	 	// DTD 문서경로
+		transformer.setOutputProperty(OutputKeys.INDENT, "yes");  
+		transformer.setOutputProperty("{http://xml.apache.org/xslt}indent-amount", "3");// WhiteSpace 포함여부
+		//transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "no");		// XSLT 프로세서가 XML 선언을 출력할지 어떨지를 지정합니다. 
+
+		/*DOMSource 객체 생성*/
+		DOMSource source = new DOMSource(document); //저장할 대상인 원본 XML문서를 Source객체로 생성한다. 
+		//* 여기서는 XML문서가 DOM 객체트리로 존재하기 때문에 DOMSource 객체를 생성해야 한다.
+
+		/*StreamResult 객체 생성*/
+		String path = "C:/java/eclipse-jee-luna-SR2-win32-x86_64/work/board-yw/src/main/webapp/WEB-INF/xmlFile/";
+		file = new File(path + createName + ".xml"); //파일의 저장하고자하는 위치와 이름을 명시.
+		StreamResult result = new StreamResult(file);
+
+		/*파일로 저장하기*/
+		transformer.transform(source,result);
+
+		System.out.println("파일 생성 완료");
+	}
+		
 }

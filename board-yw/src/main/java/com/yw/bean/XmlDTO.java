@@ -1,5 +1,20 @@
 package com.yw.bean;
 
+
+
+/**
+ * <pre>
+ * com.yw.bean
+ *   |_ XmlDTO.java
+ * </pre>
+ * 
+ * Desc : 
+ * @Company : DataStreams
+ * @Author  : HLEE
+ * @Date    : 2015. 7. 3. 오전 4:52:24
+ * @Version : 작성자 |   작성일   | 작성시간
+ * 				HLEE  | 2015.07.03 | 04:52:24
+ */
 public class XmlDTO {
 	String name;
 	String tel;

@@ -71,7 +71,8 @@ $.defaultOpen = function(url, windowName, width, height){
  */ 
 
 function insertPage(){
-	openWinCenter('boardInsertPage', 'boardInsertPage', 'width=500, height=300, status=yes, toolbar=no, menubar=no, location=no, status=no, resizable=yes') 
+	openWinCenter('boardInsertPage', 'boardInsertPage', 
+			'width=500, height=300, status=yes, toolbar=no, menubar=no, location=no, status=no, resizable=yes') 
 }
 
 
@@ -84,7 +85,8 @@ function deletePage(){
 	var save = $(".qqqq").children().children("input").val();
 	
 	if (save != null){
-		openWinCenter('boardDeletePage?objectId='+save, 'boardDeletePage', 'width=500,height=300,status=yes , toolbar=no , menubar=no , location=no, status=no, resizable=yes')
+		openWinCenter('boardDeletePage?objectId='+save, 'boardDeletePage', 
+				'width=500,height=300,status=yes , toolbar=no , menubar=no , location=no, status=no, resizable=yes')
 	}else {
 		alert("삭제할항목을 클릭해주세요");
 	}		  
@@ -100,7 +102,8 @@ function updatePage(){
 	var save = $(".qqqq").children().children("input").val();
 	
 	if (save != null){
-		openWinCenter('boardUpdatePage?objectId='+save, 'boardUpdatePage', 'width=500,height=300,status=yes , toolbar=no , menubar=no , location=no, status=no, resizable=yes')
+		openWinCenter('boardUpdatePage?objectId='+save, 'boardUpdatePage', 
+				'width=500,height=300,status=yes , toolbar=no , menubar=no , location=no, status=no, resizable=yes')
 	}else {
 			alert("수정할 항목을 클릭해주세요!");
 	}	
@@ -291,15 +294,47 @@ function domTest() {
 		}); 
 	});
 } 
- 
- 
-/*
- * -- + 1) 읽어온 Data를 XML 파일로 저장해보기  --- 진행상황 (----------)
- */
-function mkdom(){
-	alert("xml file 생성~");		 
-} 
 /* ************************************************************************** 2015/07/03 End */
+
+ 
+/* *******************************[ 2015/07/06 수정 ]************************************ 
+ * Author : HLEE
+ * -- + 1) 읽어온 Data를 XML 파일로 저장해보기  --- 진행상황 (1---------)
+ */ 
+
+function mkdom(){
+	 
+	var createName = $("#createName").val();	
+	var file_path = $("#xmlView").val(); 
+	 
+	//alert($("#xmlView").val());
+	if (file_path == "" || file_path == null){
+		alert("XML 파일을 선택해 주세요!");
+		return;
+	}
+	
+	if (createName == "" || createName == null){
+		alert("생성할 파일 이름을 적어주세요!");
+		return;
+	}
+	 
+	alert("xml file 생성~");
+	
+	$.ajax({
+		url      : "saveDOMToFile",
+		type     : "post", //****
+		dataType : "json",
+		data     : {
+					"file_path" : file_path,
+					"createName": createName
+				   },
+		
+		success  : function(data){
+			alert("생성이 완료 되었습니다.");
+		}
+	});
+} 
+
 </script>
 </head>
 
@@ -311,7 +346,8 @@ function mkdom(){
 		</div>
 		<div>
 			<input id="xmlView" type="file" style="width: 300px;">&nbsp;
-			<input type="button" value="XML VIEW" onclick="domTest()">
+			<input type="button" value="XML VIEW" onclick="domTest()"><br>
+			파일 이름<input id="createName" type="text">
 			<input type="button" value="Create XML" onclick="mkdom()">
 			<p></p>
 		</div>
