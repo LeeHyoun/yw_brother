@@ -217,7 +217,10 @@ function wordSearch(){
 			$(".cc").removeClass("qqqq");	
 			
 			$(this).addClass('qqqq');
-			save = $(".qqqq").children().children("input").val();	
+			save = $(".qqqq").children().children("input").val();
+			
+			
+			
 		}); 
 	});
 }
@@ -234,17 +237,16 @@ function listPage11(){
 
 
 
-/* *******************************[ 2015/07/03 수정 ]************************************ 
+/* *******************************[ 2015/07/03 추가 ]************************************ 
  * Author : HLEE
  * -- + 1) XML 파일을 읽어 들여 "TextArea" 에 보이기  --- 진행상황 (---------10)
  * 	  	+-- 파일을 읽어 Console 창에 출력 (O)
  *	  	+-- home.jsp 단에 TextArea 에 뿌리기. (O)
  *    	+-- HTML 형식으로 Data 처리 (O)
  */
- 
-
- 
 function domTest() {
+	 
+	 //alert("XML VIEW");
 	 
 	 var file_path = $("#xmlView").val();
 	 
@@ -264,7 +266,7 @@ function domTest() {
 			
 			success  : function(data){
 				
-				alert("ajax data : " + data[1].name);
+				//alert("ajax data : " + data[1].name);
 				
 				var content = "";
 			
@@ -272,11 +274,17 @@ function domTest() {
 				
 				for (var i = 0; i < data.length; i++) {
 					content += 	"<tr class='cc'>";
-					content += 	"<td>" + i               + "</td>";
-					content += 	"<td>" + data[i].name    + "</td>";
-					content += 	"<td>" + data[i].tel     + "</td>"
-					content += 	"<td>" + data[i].address + "</td></tr>"
-				}
+					content += 	"<td>" + i               				 + "</td>";
+					content += 	"<td>" + stringSlice(data[i].name, 5)    + "</td>";
+					content += 	"<td>" + data[i].tel     				 + "</td>";
+					content += 	"<td>" + data[i].address 				 + "</td>";
+					
+					content += 	"<input id='num'     type='hidden' value='" + i  			  + "'>";
+					content += 	"<input id='name'    type='hidden' value='" + data[i].name    + "'>";
+					content += 	"<input id='tel'     type='hidden' value='" + data[i].tel  	  + "'>";
+					content += 	"<input id='address' type='hidden' value='" + data[i].address + "'></tr>";
+					
+				}// for 
 				
 				$('#xmlData').html(content);
 				
@@ -285,32 +293,74 @@ function domTest() {
 		   				$(this).addClass('ui-state-hover');                              
 			    }).mouseout(function(){
 			   			$(this).removeClass('ui-state-hover');
-			    });
-			}
+			    }); // end mouse event
+				
+			}// success
 	 }).done(function(){  // ajax 성공시 수행.
 
 		 $(".cc").click(function(){    
 			save = -1;
-			$(".cc").removeClass("qqqq");	
+			$(".cc").removeClass("qqqq").removeClass("xmlUpdate");	
 			
 			$(this).addClass('qqqq');
 			save = $(".qqqq").children().children("input").val();	
-		}); 
-	});
-} 
+				
+			//alert($(".qqqq #num").val()); //선택한 리스트의 번호
+			
+			var num     = $(".qqqq #num"    ).val();
+			var name    = $(".qqqq #name"   ).val();
+			var tel     = $(".qqqq #tel"    ).val();
+			var address = $(".qqqq #address").val();
+			
+			var content = "";		
+			var frm     = document.updatefrm;
+			
+			content += "<form name='updatefrm' id='updatefrm'>";	
+			content += 	"번호    :	<input name='num2' 		type='text' value='" + num     + "'><br>";
+			content += 	"이름    :	<input name='name2' 	type='text' value='" + name    + "'><br>";
+			content += 	"전화번호:	<input name='tel2' 		type='text' value='" + tel     + "'><br>";
+			content += 	"주	   소:	<input name='address2' 	type='text' value='" + address + "'><br>";
+			content += 	"<input type='button' value='수정' onclick='updateXML()'>";
+
+			//content +=  'onclick="updateXML(' + "'" + frm.num2.value + "','" + frm.name2.value + "','" + frm.tel2.value + "','" + frm.address2.value + "')" + '">';
+		
+			content += '</tr></form>';
+			
+			//alert(content);
+			$('#xmlUpdate').html(content);
+			
+		}); // click
+	}); // done
+	
+} //  domTest
 /* ************************************************************************** 2015/07/03 End */
 
+
  
-/* *******************************[ 2015/07/06 수정 ]************************************ 
+/* *******************************[ 2015/07/06 추가 ]************************************ 
  * Author : HLEE
- * -- + 1) 읽어온 Data를 XML 파일로 저장해보기  --- 진행상황 (1---------)
+ * -- + 1) 읽어온 Data를 XML 파일로 저장해보기  --- 진행상황 (----- ---8-)
+ * -- + 2) 읽어온 레코드 선택하여 수정 해보기   --- 진행상황 (1---- -----)
+ * -- 	+ 2-1) 읽어온 레코드 선택하여 수정 해보기   --- 수정중... ( 2015/07/07 )
  */ 
 
+// domTest 새로고침
+function refreshXML(){
+		domTest();  
+} 
+ 
+function stringSlice(s, l) {
+		
+	return (s.length > l)?(s.substring(0, l) + "...") : s; // 최대길이를 넘어가면 최대길이 이후는 ... 으로 표현
+} 		
+ 
+//xml 파일 --> 다른이름으로 저장...
+// 차후 수정된 파일 저장용 ..
 function mkdom(){
 	 
 	var createName = $("#createName").val();	
 	var file_path = $("#xmlView").val(); 
-	 
+	
 	//alert($("#xmlView").val());
 	if (file_path == "" || file_path == null){
 		alert("XML 파일을 선택해 주세요!");
@@ -338,83 +388,111 @@ function mkdom(){
 		}
 	});
 } 
- 
- function updateXML(){
 
-	alert("수정을 시작합니다.");
+ 
+/* 레코드 하나를 선택하여 수정. */
+function updateXML(){
 	
-	var file_path = $("#xmlView").val(); 
-		 
+	var frm        	= document.updatefrm;
+	
+	var num 	 	= frm.num2.value;
+	var tel 	 	= frm.tel2.value;
+	var name 	 	= frm.name2.value;
+	var address		= frm.address2.value;
+	
+	var file_path 	= $("#xmlView").val(); 
+	 
 	//alert($("#xmlView").val());
 	if (file_path == "" || file_path == null){
 		alert("XML 파일을 선택해 주세요!");
 		return;
 	}
 	
+	/* alert("수정을 시작합니다.");
+	alert(num + tel + name + address) */
+	
+	
 	$.ajax({
 		url      : 		"updateXML",
 		type     : 		"post", //****
-		dataType : 		"json",
+		//dataType : 		"json",
 		data     : {
 						"file_path" : file_path,
+						"num" : num,
+						"name" : name,
+						"tel" : tel,
+						"address" : address,
 				   },
-		
-		success  : function(data){
+		success  : function(data) {
 			alert("수정이 완료되었습니다.");
+			refreshXML();
+			
 		}
-	}).done(function(){
-		alert("성공");
-		domTest();
 	}).fail(function(){
-		alert("수정실패...");
-		domTest();
-	});
- }
+		alert("ERROR: updateXML Ajax ");
+	}); //ajax
+}
+
+
+function temp(){
+	
+}
+
 
 </script>
 </head>
 
 
-<body>
-	<div class="a4">
-		<div>
-			<h1>xml</h1>
-		</div>
-		<div>
-			<input id="xmlView" type="file" style="width: 280px;">&nbsp;
-			<input type="button" value="XML VIEW" onclick="domTest()"><br>
-			파일 이름<input id="createName" type="text">
-			<input type="button" value="Create XML" onclick="mkdom()">
-			<input type="button" value="Update XML" onclick="updateXML()">
-			<p></p>
-		</div>
-		<div id="xmlData" style="border:solid; 2px; height: 200px; width: 600px; overflow: auto;"></div>
-				
-		
-		<hr>
-		<div>
-			<h1>word</h1>
-		</div>
 
-		<div class="a3">
-			<span class="a1">단어명</span> 
-			<input type="text" id="w_search" class="a1">
-			<div>
-				<input type="button" value="검색" onclick="wordSearch()">
-			</div>
-		</div>
+
+
+<body>
+	<div class="a4" style="width: 850px;">
 		<div>
-			<input type="button" value="추가" onclick="insertPage()" >
-			<input type="button" value="삭제" onclick="deletePage()" >
-			<input type="button" value="수정" onclick="updatePage()" >
-			<input type="button" value="목록" onclick="listPage()" >
-			<!-- <input type="button" value="목록접기" onclick="listPage11()" > -->
+			<div>
+				<h1>xml</h1>
+			</div>
+			<div>
+				<input id="xmlView" type="file" style="width: 300px;">&nbsp;
+				<input type="button" value="XML VIEW" onclick="domTest()"><br>
+				파일 이름<input id="createName" type="text">
+				<input type="button" value="Create XML" onclick="mkdom()">
+				<input type="button" value="temp" onclick="temp()">
+				<p></p>
+			</div>
+			<div id="xmlData" style="font-size: 10pt; border:solid; 2px; height: 200px; width: 380px; overflow: auto;  margin-right:10px; float: left;"></div>
+			<div id="xmlUpdate" style="border:solid; 2px; height: 200px; width: 280px; overflow: auto; float: none;"></div>
 		</div>
-		<br>
-		
-		<div id="show"></div>
-		<div id="result"></div>
-		<!-- <div id="show_search"></div> -->
+		<hr>
+		<div >
+			<div>
+				<h1>word</h1>
+			</div>
+	
+			<div class="a3">
+				<span class="a1">단어명</span> 
+				<input type="text" id="w_search" class="a1">
+				<div>
+					<input type="button" value="검색" onclick="wordSearch()">
+				</div>
+			</div>
+			<div>
+				<input type="button" value="추가" onclick="insertPage()" >
+				<input type="button" value="삭제" onclick="deletePage()" >
+				<input type="button" value="수정" onclick="updatePage()" >
+				<input type="button" value="목록" onclick="listPage()" >
+				<!-- <input type="button" value="목록접기" onclick="listPage11()" > -->
+			</div>
+			<br>
+			<table>
+				<tr>
+					<td ></td>
+				</tr>
+			</table>
+			<div id="show"></div>
+			<div id="result"></div>
+			<!-- <div id="show_search"></div> -->
+		</div>
 	</div>
 </body>
 </html>

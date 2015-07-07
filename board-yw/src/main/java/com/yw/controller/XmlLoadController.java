@@ -14,6 +14,7 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -36,9 +37,10 @@ import com.yw.bean.XmlDTO;
  * @Company : DataStreams
  * @Author  : HLEE
  * @Date    : 2015. 7. 3. 오후 4:52:03
- * @Version : 작성자 |   작성일   | 작성시간
- * 				HLEE  | 2015.07.03 | 04:52:03
- * 				HLEE  | 2015.07.06 | 09:42:03
+ * @Version : 작성자 |   작성일   | 작성시간 | 수정사항
+ * 				HLEE  | 2015.07.03 | 04:52:03 | 최초 작성
+ * 				HLEE  | 2015.07.06 | 09:42:03 | DATA ->>> XML 저장 또는 XML파일 읽어서 수정
+ * 				HLEE  | 2015.07.07 | 09:56:03 | Node 추가 후 저장.
  */
 
 /**
@@ -63,6 +65,7 @@ public class XmlLoadController {
 	 * @param l : 표현될 문자열 최대길이
 	 * @return
 	 */
+	
 	public String stringSlice(String s, int l) {
 		
 		StringBuffer sb = new StringBuffer();
@@ -195,9 +198,9 @@ public class XmlLoadController {
 					
 					nameNode = name.getNodeValue();
 					
-					if ( !(nameNode.length() < 1) && nameNode != null){
+					/*if ( !(nameNode.length() < 1) && nameNode != null){
 						nameNode = stringSlice(nameNode, 5);
-					}
+					}*/
 					
 					System.out.println("name    : " + nameNode);
 
@@ -215,9 +218,9 @@ public class XmlLoadController {
 					
 					addrNode = address.getNodeValue();
 					
-					if ( !(addrNode.length() < 1) && addrNode != null){
-						addrNode = stringSlice(addrNode, 7);
-					}
+					/*if ( !(addrNode.length() < 1) && addrNode != null){
+						//addrNode = stringSlice(addrNode, 7);
+					}*/
 					
 					System.out.println("address : " + addrNode);
 					
@@ -273,8 +276,8 @@ public class XmlLoadController {
 		/*XML 문서 파싱하기*/
 		Document document = builder.parse(file_path);
 
-		/*루트 엘리먼트 참조 얻기*/
-		Element eRoot = document.getDocumentElement();
+		/*루트 엘리먼트 참조 얻기
+		Element eRoot = document.getDocumentElement();*/
 
 		/*변환기 생성*/
 		TransformerFactory tf = TransformerFactory.newInstance();
@@ -311,10 +314,14 @@ public class XmlLoadController {
 	 * @param file_path
 	 * @throws Exception
 	 */
+	@ResponseBody
 	@RequestMapping(value="/updateXML", method=RequestMethod.POST)
-	public void updateXML(@Param(value="file_path") String file_path) throws Exception{
+	public void updateXML(@ModelAttribute XmlDTO xmlDTO) throws Exception{
 		
 		System.out.println("업데이트를 시작합니다.");
+		System.out.println(xmlDTO.toString());
+		
+		File file = null;
 		
 		/*DOM 파서 생성*/
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
@@ -322,20 +329,72 @@ public class XmlLoadController {
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		
 		/*XML 문서 파싱하기*/
-		Document document = builder.parse(file_path);
+		Document document = builder.parse(xmlDTO.getFile_path());
 
 		//------------------------수정 내용 중 요소 노드
 		//고칠 노드 이름 찾을 수 있는 모든 노드 똑같은 이름의 노드 큐 받고
-		NodeList nodes = document.getElementsByTagName("name");
+		NodeList name = document.getElementsByTagName("name");
+		NodeList tel = document.getElementsByTagName("tel");
+		NodeList address = document.getElementsByTagName("address");
+		
 		//지금 대기 중 선택 고칠 노드
-		Node n = nodes.item(0);
+		Node nameNode = name.item(xmlDTO.getNum());
+		Node telNode = tel.item(xmlDTO.getNum());
+		Node addrNode = address.item(xmlDTO.getNum());
+		
 		//이 노드의 텍스트 수정
-		n.setTextContent("수정된노드입니다.");
+		nameNode.setTextContent(xmlDTO.getName()); 		//이름 수정
+		telNode.setTextContent(xmlDTO.getTel());   		//전화 수정
+		addrNode.setTextContent(xmlDTO.getAddress());	//주소 수정		
 		
 		System.out.println("수정이 완료되었습니다.");
 		
+		//-------------------------파일로 저장 중
+		//만듭니다. 쓸 변환 DOM 대상 공장 대상
+		TransformerFactory factory2 = TransformerFactory.newInstance();
 		
-		/*//------------------------노드 하위 원소 증가
+		//획득 변환기 대상
+		Transformer tf = factory2.newTransformer();
+		tf.setOutputProperty(OutputKeys.METHOD, "xml");
+		tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
+		tf.setOutputProperty(OutputKeys.INDENT, "yes");
+		
+		//정의 변형할 원본 개체
+		DOMSource xml = new DOMSource(document);
+		
+		
+		file = new File( xmlDTO.getFile_path() );
+		StreamResult sr = new StreamResult(file); //정의 다음으로 변환 대상 파일이 한다
+		//System.out.println(xmlDTO.getFile_path());
+		
+		//변환 시작
+		tf.transform(xml, sr);
+		System.out.println("수정사항 저장 완료");
+	}// end method updateXML
+	
+	
+	
+	
+	/**
+	 * Desc : Node 추가 생성
+	 * @Method Name : addXML
+	 * @param xmlDTO
+	 * @throws Exception
+	 */
+	@RequestMapping(value="/addXML", method=RequestMethod.POST)
+	public void addXML(@ModelAttribute XmlDTO xmlDTO) throws Exception{
+		
+		File file = null;
+		
+		/*DOM 파서 생성*/
+		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+		factory.setIgnoringElementContentWhitespace(true); //요소의 내용의 공백을 배제하도록 지정 
+		DocumentBuilder builder = factory.newDocumentBuilder();
+		
+		/*XML 문서 파싱하기*/
+		Document document = builder.parse(xmlDTO.getFile_path());
+		
+		//------------------------노드 하위 원소 증가
 		//고칠 노드 이름 찾을 수 있는 모든 노드 똑같은 이름의 노드 큐 받고
 		NodeList nodes1 = document.getElementsByTagName("addressbook");
 		//지금 대기 중 선택 고칠 노드
@@ -365,9 +424,8 @@ public class XmlLoadController {
 		person.appendChild(nn3);
 		root_ChildNode.appendChild(person);
 
-		System.out.println(document.getElementsByTagName("person").getLength());*/
-
-
+		System.out.println(document.getElementsByTagName("person").getLength());
+		
 		//-------------------------파일로 저장 중
 		//만듭니다. 쓸 변환 DOM 대상 공장 대상
 		TransformerFactory factory2 = TransformerFactory.newInstance();
@@ -381,12 +439,11 @@ public class XmlLoadController {
 		//정의 변형할 원본 개체
 		DOMSource xml = new DOMSource(document);
 		
-		//정의 다음으로 변환 대상 파일이 한다
-		StreamResult sr = new StreamResult(new File(file_path));
 		
+		file = new File( xmlDTO.getFile_path() );
+		StreamResult sr = new StreamResult(file); //정의 다음으로 변환 대상 파일이 한다
+		System.out.println(xmlDTO.getFile_path());
 		//변환 시작
 		tf.transform(xml, sr);
-
-	}// end method updateXML
-	
+	}
 }// end class
