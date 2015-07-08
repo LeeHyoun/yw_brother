@@ -452,7 +452,6 @@ function fileform(){
 	}); //ajax
 } 
 
-
 </script>
 </head>
 
@@ -460,13 +459,17 @@ function fileform(){
 <body>
 	<div class="a4" style="width: 850px;">
 		<div>
-			<div>파일 업로드</div>
+			<div><h1>파일 업로드</h1></div>
 			<form name="filefrm" id="filefrm" method="POST" enctype="multipart/form-data">
 				<div>
 					<input type="file" name="file" id="file" size="50">
 					<input type="button" value="File Form" onclick="fileform()">
 				</div>
 			</form>
+			<div>
+				<input type="button" value="파일작성" onclick="location.href='/fileUploadForm'">
+				<a href="/download?path=C:/Users/NB1504PI03/Pictures&fileName=121212.jpg" > 이미지 </a>
+			</div>
 		</div>
 		
 		<hr>
