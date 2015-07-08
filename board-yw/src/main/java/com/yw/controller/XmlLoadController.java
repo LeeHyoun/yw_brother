@@ -42,19 +42,6 @@ import com.yw.bean.XmlDTO;
  * 				HLEE  | 2015.07.06 | 09:42:03 | DATA ->>> XML 저장 또는 XML파일 읽어서 수정
  * 				HLEE  | 2015.07.07 | 09:56:03 | Node 추가 후 저장.
  */
-
-/**
- * <pre>
- * com.yw.controller
- *   |_ XmlLoadController.java
- * </pre>
- * 
- * Desc : 
- * @Company : DataStreams
- * @Author  : HLEE
- * @Date    : 2015. 7. 6. 오후 1:00:39
- * @Version : 
- */
 @Controller
 public class XmlLoadController {
 
@@ -297,7 +284,7 @@ public class XmlLoadController {
 
 		/*StreamResult 객체 생성*/
 		String path = "C:/java/eclipse-jee-luna-SR2-win32-x86_64/work/board-yw/src/main/webapp/WEB-INF/xmlFile/";
-		file = new File(path + createName + ".xml"); //파일의 저장하고자하는 위치와 이름을 명시.
+		file = new File(path + createName + ".xml"); 	//파일의 저장하고자하는 위치와 이름을 명시.
 		StreamResult result = new StreamResult(file);
 
 		/*파일로 저장하기*/
@@ -325,13 +312,13 @@ public class XmlLoadController {
 		
 		/*DOM 파서 생성*/
 		DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-		factory.setIgnoringElementContentWhitespace(true); //요소의 내용의 공백을 배제하도록 지정 
+		factory.setIgnoringElementContentWhitespace(true); 		//요소의 내용의 공백을 배제하도록 지정 
 		DocumentBuilder builder = factory.newDocumentBuilder();
 		
 		/*XML 문서 파싱하기*/
 		Document document = builder.parse(xmlDTO.getFile_path());
 
-		//------------------------수정 내용 중 요소 노드
+		//------------------------ 수정 내용 중 요소 노드
 		//고칠 노드 이름 찾을 수 있는 모든 노드 똑같은 이름의 노드 큐 받고
 		NodeList name = document.getElementsByTagName("name");
 		NodeList tel = document.getElementsByTagName("tel");

@@ -430,24 +430,46 @@ function updateXML(){
 		}
 	}).fail(function(){
 		alert("ERROR: updateXML Ajax ");
-	}); //ajax
+	}); // fail ajax
 }
 
 
-function temp(){
+function fileform(){
+	//alert("file upload");
 	
-}
+	var file = document.filefrm.file;
+	
+	$.ajax({
+		url      : 		"file",
+		type     : 		"post", //****
+		//dataType : 		"json",
+		data     : {
+						"file" 		:	file
+					},
+		success  : function(data) {
+			alert("upload 완료");			
+		}
+	}); //ajax
+} 
 
 
 </script>
 </head>
 
 
-
-
-
 <body>
 	<div class="a4" style="width: 850px;">
+		<div>
+			<div>파일 업로드</div>
+			<form name="filefrm" id="filefrm" method="POST" enctype="multipart/form-data">
+				<div>
+					<input type="file" name="file" id="file" size="50">
+					<input type="button" value="File Form" onclick="fileform()">
+				</div>
+			</form>
+		</div>
+		
+		<hr>
 		<div>
 			<div>
 				<h1>xml</h1>
@@ -455,9 +477,9 @@ function temp(){
 			<div>
 				<input id="xmlView" type="file" style="width: 300px;">&nbsp;
 				<input type="button" value="XML VIEW" onclick="domTest()"><br>
-				파일 이름<input id="createName" type="text">
+				<label for="createName">파일명</label>
+				<input id="createName" type="text">
 				<input type="button" value="Create XML" onclick="mkdom()">
-				<input type="button" value="temp" onclick="temp()">
 				<p></p>
 			</div>
 			<div id="xmlData" style="font-size: 10pt; border:solid; 2px; height: 200px; width: 380px; overflow: auto;  margin-right:10px; float: left;"></div>
@@ -484,11 +506,8 @@ function temp(){
 				<!-- <input type="button" value="목록접기" onclick="listPage11()" > -->
 			</div>
 			<br>
-			<table>
-				<tr>
-					<td ></td>
-				</tr>
-			</table>
+			
+			
 			<div id="show"></div>
 			<div id="result"></div>
 			<!-- <div id="show_search"></div> -->

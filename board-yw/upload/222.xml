@@ -1,28 +1,28 @@
 <?xml version="1.0" encoding="utf-8" standalone="no"?>
 <addressbook>
 	<person>
-		<name>test</name>
-		<tel>test22</tel>
-		<tel>010-1245-1234</tel>
-		<address>test222</address>
+		<name>수정사항</name>
+		<tel>ttt</tel>
+		<tel>김XX이사입니다.</tel>
+		<address>ttt</address>
 	</person>
 	<person>
-		<name>수정확인</name>
+		<name>ttt</name>
 		<tel>010-1245-1234</tel>
-		<tel>010-1245-1234</tel>
-		<address>222</address>
+		<tel>없음</tel>
+		<address>수정된노드입니다.</address>
 	</person>
 	<person>
 		<name>김XX이사입니다.</name>
 		<tel>010-1245-1234</tel>
 		<tel>없음</tel>
-		<address>경기도민</address>
+		<address>1111</address>
 	</person>
 	<person>
-		<name>김XX이사입니다.</name>
+		<name>수정된노드입니다.</name>
 		<tel>010-1245-1234</tel>
 		<tel>없음</tel>
-		<address>여기도 수정</address>
+		<address>경기</address>
 	</person>
 	
 </addressbook>

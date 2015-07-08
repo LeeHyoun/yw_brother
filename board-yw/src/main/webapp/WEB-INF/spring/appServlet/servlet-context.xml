@@ -35,11 +35,11 @@
 
 	<beans:bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>	
 	
-		<!-- 스프링 파일 스캐닝 -->
-	<context:component-scan base-package="com.yw.controller" />
-	<context:component-scan base-package="com.yw.service" />
-	<context:component-scan base-package="com.yw.bean" />
-	<context:component-scan base-package="com.yw.dao" />
+	<!-- 스프링 파일 스캐닝 -->
+	<context:component-scan base-package="com.yw" />
 	
+	<!-- multipartResolver -->
+	<beans:bean id="multipartResolver" 
+	class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>
 	
 </beans:beans>
