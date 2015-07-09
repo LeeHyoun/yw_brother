@@ -127,7 +127,7 @@
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log." suffix=".txt"/>
 
       
-      <Context docBase="board-yw" path="/" reloadable="true" source="org.eclipse.jst.jee.server:board-yw"/></Host>
+      <Context docBase="board-yw" path="/" reloadable="true" source="org.eclipse.jst.jee.server:board-yw"/><Context docBase="SpringProject-master" path="/SpringProject-master" reloadable="true" source="org.eclipse.jst.jee.server:SpringProject-master"/></Host>
     </Engine>
   </Service>
 </Server>
