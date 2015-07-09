@@ -24,20 +24,20 @@ function insert_submit(){
 	
 		$.ajax({
 		
-			url:"boardInsert",
-			type : "post",
-			data : {	
-						"wordName" : $("#wordName").val(),
-						"wordEnName" : $("#wordEnName").val(),
-						"wordDefine" : $("#wordDefine").val(),
-						"writer" : $("#writer").val()
-					},
+			url		:"boardInsert",
+			type 	: "post",
+			data 	: {	
+						"wordName" 		: $("#wordName").val(),
+						"wordEnName"	: $("#wordEnName").val(),
+						"wordDefine" 	: $("#wordDefine").val(),
+						"writer" 		: $("#writer").val()
+					  },
 			success : function(data){
 				 window.opener.refreshGo(); 
 				 window.close();  
 				
 			},errors : function(data){
-				alert("1");
+				alert("insert ERROR");
 			}
 		
 		});
