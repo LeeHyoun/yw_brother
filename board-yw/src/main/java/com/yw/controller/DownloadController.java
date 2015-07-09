@@ -11,16 +11,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.servlet.ModelAndView;
 
-
 @Controller
-public class DownloadController implements ApplicationContextAware{
+public class DownloadController implements ApplicationContextAware {
 
 	private WebApplicationContext context = null;
 
 	@RequestMapping("/download")
-	public ModelAndView download(
-			@RequestParam("path")		String path, 
-			@RequestParam("fileName")	String fileName){
+	public ModelAndView download(@RequestParam("path") String path,
+			@RequestParam("fileName") String fileName) {
 
 		String fullPath = path + "\\" + fileName;
 
@@ -38,4 +36,3 @@ public class DownloadController implements ApplicationContextAware{
 	}
 
 }
-

@@ -9,7 +9,7 @@
 	<person>
 		<name>김XX이사입니다.</name>
 		<tel>김XX이사입니다.</tel>
-		<tel>김XX이사입니다.</tel>
+		<tel>010-1245-1234</tel>
 		<address>김XX이사입니다.</address>
 	</person>
 	<person>
@@ -22,6 +22,6 @@
 		<name>김XX이사입니다.</name>
 		<tel>010-1245-1234</tel>
 		<tel>없음</tel>
-		<address>김XX이사입니다.</address>
+		<address>서울시</address>
 	</person>
 </addressbook>

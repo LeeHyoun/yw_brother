@@ -23,23 +23,24 @@ public class BoardMainController {
 	
 	@Autowired
 	private BoardService boardService;
-	
+
 	
 	/*
 	 * classpath
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String boardMain() {
-		
+
 		return "home";
 	}
+
 	
 	/*
 	 * 단어 리스트 가져오기
 	 */
-	@RequestMapping(value="/boardList")
+	@RequestMapping(value = "/boardList")
 	@ResponseBody
-	public List<Word> boardList(){
+	public List<Word> boardList() {
 		
 		System.out.println("리스트뽑아주오");
 		
